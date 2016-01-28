@@ -18,7 +18,7 @@
  *
  * Plugin Name: Affiliates Gravity Forms Tax Example
  * Plugin URI: http://www.itthinx.com/shop/affiliates-pro/
- * Description: An example plugin.
+ * Description: This plugin will deduce the amount corresponding to any product form field named 'Tax' from the amount taken to calculate commissions based on product fields.
  * Version: 1.0.0
  * Author: itthinx
  * Author URI: http://www.itthinx.com
@@ -41,7 +41,7 @@ class Affiliates_Gravity_Forms_Tax_Example {
 	}
 
 	/**
-	 * Product amount filter.
+	 * Product amount filter - this will deduct any field named 'Tax' (case-insensitive) from the $amount.
 	 * 
 	 * @param float $amount
 	 * @param array $products
@@ -49,7 +49,18 @@ class Affiliates_Gravity_Forms_Tax_Example {
 	 * @return float
 	 */
 	public static function affiliates_gravity_forms_products_amount( $amount, $products, $entry ) {
-		error_log(var_export($products,true));
+		if ( isset( $products['products'] ) && is_array( $products['products'] ) ) {
+			foreach( $products['products'] as $id => $values ) {
+				if ( isset( $values['name'] ) && ( strcasecmp( $values['name'], 'Tax' ) === 0 ) ) {
+					if ( isset( $values['price'] ) ) {
+						if ( class_exists( 'GFCommon' ) && method_exists( 'GFCommon', 'to_number' ) ) {
+						$tax = GFCommon::to_number( $values['price'] );
+						$amount -= floatval( $tax );
+					}
+					}
+				}
+			}
+		}
 		return $amount;
 	}
 
