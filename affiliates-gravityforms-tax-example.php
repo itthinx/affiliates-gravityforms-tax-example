@@ -18,7 +18,7 @@
  *
  * Plugin Name: Affiliates Gravity Forms Tax Example
  * Plugin URI: http://www.itthinx.com/shop/affiliates-pro/
- * Description: Gravity Forms lacks proper support for taxes. This plugin will deduce the amount corresponding to any product form field named 'Tax' or 'Taxes' from the amount taken to calculate commissions based on product fields.
+ * Description: Gravity Forms lacks dedicated tax fields. This plugin will deduce the amount corresponding to any product form field named 'Tax' or 'Taxes' from the amount taken to calculate commissions based on product fields.
  * Version: 1.0.0
  * Author: itthinx
  * Author URI: http://www.itthinx.com
@@ -27,7 +27,7 @@
  */
 
 /**
- * Exapmle implementation using the filters provided in our Gravity Forms integration
+ * Example implementation using the filters provided in our Gravity Forms integration
  * provided with Affiliates Pro and Affiliates Enterprise.
  */
 class Affiliates_Gravity_Forms_Tax_Example {
