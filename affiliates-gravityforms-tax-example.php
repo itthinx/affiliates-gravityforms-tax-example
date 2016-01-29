@@ -18,7 +18,7 @@
  *
  * Plugin Name: Affiliates Gravity Forms Tax Example
  * Plugin URI: http://www.itthinx.com/shop/affiliates-pro/
- * Description: Gravity Forms lacks proper support for taxes. This plugin will deduce the amount corresponding to any product form field named 'Tax' from the amount taken to calculate commissions based on product fields.
+ * Description: Gravity Forms lacks proper support for taxes. This plugin will deduce the amount corresponding to any product form field named 'Tax' or 'Taxes' from the amount taken to calculate commissions based on product fields.
  * Version: 1.0.0
  * Author: itthinx
  * Author URI: http://www.itthinx.com
@@ -33,11 +33,18 @@
 class Affiliates_Gravity_Forms_Tax_Example {
 
 	/**
+	 * Field names for those considered as taxes.
+	 * @var array of string
+	 */
+	public static $tax_fields = array( 'tax', 'taxes' );
+
+	/**
 	 * Add filter hooks.
 	 */
 	public static function init() {
 		add_filter( 'affiliates_gravity_forms_products_amount', array( __CLASS__, 'affiliates_gravity_forms_products_amount' ), 10, 3 );
 		add_filter( 'affiliates_gravity_forms_amount', array( __CLASS__, 'affiliates_gravity_forms_amount' ), 10, 3 );
+		self::$tax_fields = apply_filters( 'affiliates_gravity_forms_tax_example_fields', self::$tax_fields );
 	}
 
 	/**
@@ -51,12 +58,14 @@ class Affiliates_Gravity_Forms_Tax_Example {
 	public static function affiliates_gravity_forms_products_amount( $amount, $products, $entry ) {
 		if ( isset( $products['products'] ) && is_array( $products['products'] ) ) {
 			foreach( $products['products'] as $id => $values ) {
-				if ( isset( $values['name'] ) && ( strcasecmp( $values['name'], 'Tax' ) === 0 ) ) {
-					if ( isset( $values['price'] ) ) {
-						if ( class_exists( 'GFCommon' ) && method_exists( 'GFCommon', 'to_number' ) ) {
+				if (
+					isset( $values['name'] ) &&
+					isset( $values['price'] ) &&
+					in_array( strtolower( $values['name'] ), array_map( 'strtolower', self::$tax_fields ) )
+				) {
+					if ( class_exists( 'GFCommon' ) && method_exists( 'GFCommon', 'to_number' ) ) {
 						$tax = GFCommon::to_number( $values['price'] );
 						$amount -= floatval( $tax );
-					}
 					}
 				}
 			}
