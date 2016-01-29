@@ -7,7 +7,7 @@ Tested up to: 4.4.1
 Stable tag: 1.0.0
 License: GPLv3
 
- Gravity Forms lacks proper tax support. This plugin deducts product form fields representing taxes when calculating product referral commissions.
+ Gravity Forms lacks dedicated tax fields. This plugin deducts product form fields representing taxes when calculating product referral commissions.
 
 == Description ==
 
